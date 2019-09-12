@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Ordenar almacen</title>
+    <link rel="stylesheet" type="text/css" href="estilos/principal.css">
+    <link rel="stylesheet" type="text/css" href="estilos/principalChico.css">
+    <link rel="stylesheet" type="text/css" href="estilos/modificaciones.css">
+  </head>
+  <body>
+    <div class="contenedor" ng-app="aplicacion" ng-controller="controlPrincipal">
+      <header>
+        <img id="Logo" src="imagenes/T_LOGO.png" style="width: 50px">
+        <nav class="nav_link">
+          <ul>
+            <li><a href="#">Lista</a></li>
+            <li><a href="#">Ingresar</a></li>
+            <li><a href="#">Borrar</a></li>
+            <li><a href="/modificacionLibre">Modificar</a></li>
+            <li><a href="#">ARsystem</a></li>
+          </ul>
+        </nav>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">menu</a>
+        <button><a href="/">Inicio</a></button>
+      </header>
+      <div id="linksMobile">
+          <ul>
+            <li><a href="#">Lista</a></li>
+            <li><a href="#">Ingresar</a></li>
+            <li><a href="#">Borrar</a></li>
+            <li><a href="/modificacionLibre">Modificar</a></li>
+            <li><a href="#">ARsystem</a></li>
+          </ul>
+      </div>
+      <div class="modificaciones">
+        <h4>Modificacion de objetos</h4>
+        <br>
+        <form form method="post" action="/modificar">
+          <h3>Accion</h3>
+          <select class="opciones select" name="Modificacion">
+            <option value="agregar">Agregar</option>
+            <option value="sacar">Sacar</option>
+          </select>
+          <h3>Identificador</h3>
+          <input class="opciones input" type="number" name="Identificador" value={{identificador}}>
+          <input class="opciones input" type="number" name="Cantidad" value="0">
+          <button>Modificar</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script>
+    var id = "<%= id%>";
+    console.log(id);
+    var app = angular.module('aplicacion', []);
+    app.controller('controlPrincipal', function($scope, $http) {
+      $scope.identificador = id;
+    });
+  </script>
+  <script>
+      function myFunction() {
+        var x = document.getElementById("linksMobile");
+        if (x.style.display === "block") {
+          x.style.display = "none";
+        } else {
+          x.style.display = "block";
+        }
+      }
+      </script>
+</html>

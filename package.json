@@ -1,0 +1,13 @@
+{
+    "name": "softwareT",
+    "version": "1.0.0",
+    "dependencies": {
+        "archiver": "^3.1.1",
+        "body-parser": "^1.5.1",
+        "ejs": "^2.6.1",
+        "express": "^4.7.1",
+        "method-override": "^2.3.10",
+        "mongodb": "^3.1.13",
+        "node": "^11.13.0"
+    }
+}

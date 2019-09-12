@@ -1,0 +1,19 @@
+@media screen and (max-width: 1100px){
+  .listas{
+    overflow: none;
+  }
+  
+  .navegador_lista{
+    float: none;
+    width: 96%;
+    margin: 10px 2%;
+  }
+
+  .icon{
+    display: block;
+  }
+
+  .nav_link{
+    display: none;
+  }
+}
