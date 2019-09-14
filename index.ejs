@@ -3,6 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <title>Ordenar almacen</title>
     <link rel="stylesheet" type="text/css" href="estilos/principal.css">
     <link rel="stylesheet" type="text/css" href="estilos/principalChico.css">
@@ -14,7 +15,7 @@
         <img id="Logo" src="imagenes/T_LOGO.png" style="width: 50px">
         <nav class="nav_link">
           <ul>
-            <li><a href="#">Lista</a></li>
+            <li><a href="/">Lista</a></li>
             <li><a href="#">Ingresar</a></li>
             <li><a href="#">Borrar</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
@@ -26,14 +27,14 @@
       </header>
       <div id="linksMobile">
           <ul>
-            <li><a href="#">Lista</a></li>
+            <li><a href="/">Lista</a></li>
             <li><a href="#">Ingresar</a></li>
             <li><a href="#">Borrar</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
             <li><a href="#">ARsystem</a></li>
           </ul>
       </div>
-      <div class="listas" >
+      <div class="listas">
         <div class="navegador_lista" ng-repeat="lista in almacenes">
           <h4 id="titulo_lista">Almacen</h4>
           <div class="buscador">
@@ -74,15 +75,11 @@
   <script>
     var app = angular.module('aplicacion', []);
     app.controller('controlPrincipal', function($scope, $http) {
+      var otro = <%- JSON.stringify(documento)%>;
+      console.log(otro);
       $scope.almacenes = [
         { nombre:"almacen principal",
-          objetos:[
-            {nombre:"luces",sector:"A01",fechaModificacion:"20/02/2019",editor:"paula rial",modificacion:"modifico",cantidad:20,id:1},
-            {nombre:"perros",sector:"B02",fechaModificacion:"30/03/2019",editor:"anonimo",modificacion:"ingreso",cantidad:2,id:2},
-            {nombre:"lanza papelitos",sector:"-",fechaModificacion:"19/02/2019",editor:"bati",modificacion:"ingreso",cantidad:3,id:3},
-            {nombre:"papelitos",sector:"-",fechaModificacion:"19/02/2019",editor:"julieta",modificacion:"ingreso",cantidad:"40kg",id:4}
-          ],
-          sectores:["Todo","A01","B02","-"]
+          objetos:otro
         }
       ];
     });

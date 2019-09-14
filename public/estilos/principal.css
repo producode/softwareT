@@ -33,6 +33,7 @@ button{
   padding: 5px 10px;
   border-radius: 20px;
   background-color: #00758a;
+  color: aliceblue;
 }
 
 .nav_link, #linksMobile{
