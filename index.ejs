@@ -16,8 +16,7 @@
         <nav class="nav_link">
           <ul>
             <li><a href="/">Lista</a></li>
-            <li><a href="#">Ingresar</a></li>
-            <li><a href="#">Borrar</a></li>
+            <li><a href="/ingresar">Administracion</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
             <li><a href="#">ARsystem</a></li>
           </ul>
@@ -28,8 +27,7 @@
       <div id="linksMobile">
           <ul>
             <li><a href="/">Lista</a></li>
-            <li><a href="#">Ingresar</a></li>
-            <li><a href="#">Borrar</a></li>
+            <li><a href="/ingresar">Administracion</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
             <li><a href="#">ARsystem</a></li>
           </ul>
@@ -48,6 +46,7 @@
                 <th>Sector</th>
                 <th class="quitar">Fecha de modificacion</th>
                 <th class="quitar">Ultimo en modificar</th>
+                <th class="quitas">Tipo de modificacion</th>
                 <th>Cantidad</th>
                 <th class="quitar">ID</th>
                 <th>Modificar</th>
@@ -57,6 +56,7 @@
                 <td>{{objetos.sector}}</td>
                 <td class="quitar">{{objetos.fechaModificacion}}</td>
                 <td class="quitar">{{objetos.editor}}</td>
+                <td class="quitar">{{objetos.modificacion}}</td>
                 <td>{{objetos.cantidad}}</td>
                 <td class="quitar" name="id" >{{objetos.id}}</td>
                 <td>

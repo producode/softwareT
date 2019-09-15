@@ -24,58 +24,54 @@
         <button><a href="/">Inicio</a></button>
       </header>
       <div id="linksMobile">
-          <ul>
-            <li><a href="/">Lista</a></li>
-            <li><a href="/ingresar">Administracion</a></li>
-            <li><a href="/modificacionLibre">Modificar</a></li>
-            <li><a href="#">ARsystem</a></li>
-          </ul>
+        <ul>
+          <li><a href="/">Lista</a></li>
+          <li><a href="/ingresar">Administracion</a></li>
+          <li><a href="/modificacionLibre">Modificar</a></li>
+          <li><a href="#">ARsystem</a></li>
+        </ul>
       </div>
-
       <div class="modificaciones">
         <div class="listas">
           <div class="navegador_lista">
-            <h4>Modificacion de objetos</h4>
+            <h4>Ingresar objeto</h4>
             <br>
-            <form method="post" action="/modificar">
-              <h3>Accion</h3>
-              <select class="opciones select" name="Modificacion">
-                <option value="agregar">Agregar</option>
-                <option value="sacar">Sacar</option>
-              </select>
-              <h3>Identificador</h3>
-              <input class="opciones input" type="number" name="Identificador" value={{identificador}}>
+            <form method="post" action="/ingresarObjeto">
+              <h3>Nombre</h3>
+              <input class="opciones input" type="text" name="Nombre">
               <h3>Cantidad</h3>
               <input class="opciones input" type="number" name="Cantidad" value="0">
+              <h3>Cantidad minima</h3>
+              <input class="opciones input" type="number" name="CantidadMinima" value="0">
+              <h3>Sector</h3>
+              <input class="opciones input" type="text" name="Sector">
+              <h3>Unidades</h3>
+              <input class="opciones input" type="text" name="Unidad">
+              <h3>Contraseña</h3>
+              <input class="opciones input" type="password" name="Contrasena">
               <br>
               <br>
-              <button>Modificar</button>
+              <button>Ingresar</button>
             </form>
           </div>
           <div class="navegador_lista">
-            <h4>Transferir objetos</h4>
-            <br>
-            <form method="POST" action="/transferir">
-              <h3>Identificador</h3>
-              <input class="opciones input" type="number" name="Identificador" value={{identificador}}>
-              <h3>Sector nuevo</h3>
-              <input class="opciones input" type="text" name="Sector" value="-">
+              <h4>Eliminar objeto</h4>
               <br>
-              <br>
-              <button>Modificar</button>
-            </form>
-          </div>
+              <form method="post" action="/eliminarObjeto">
+                <h3>Identificador</h3>
+                <input class="opciones input" type="number" name="Identificador">
+                <h3>Contraseña</h3>
+                <input class="opciones input" type="password" name="Contrasena">
+                <br>
+                <br>
+                <button>Eliminar</button>
+              </form>
+            </div>
         </div>
       </div>
     </div>
   </body>
   <script>
-    var id = "<%= id%>";
-    console.log(id);
-    var app = angular.module('aplicacion', []);
-    app.controller('controlPrincipal', function($scope, $http) {
-      $scope.identificador = id;
-    });
   </script>
   <script>
       function myFunction() {
