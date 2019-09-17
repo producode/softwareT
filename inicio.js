@@ -130,7 +130,7 @@ app.post('/eliminarObjeto',function(Request,Response){
     mongoDB.connect(DataBase, function(err, db) {
       if (err) throw err;
       var dbo = db.db("baseT");
-      if(Request.body.Contrasena == "T$produciones"){
+      if(Request.body.Contrasena == "T$producciones"){
         var myquery = { id: parseInt(Request.body.Identificador) };
         console.log(myquery);
         dbo.collection("almacen").deleteOne(myquery, function(err, obj) {
