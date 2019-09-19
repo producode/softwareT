@@ -3,10 +3,17 @@ var express = require("express"),
     bodyParser  = require("body-parser"),
     methodOverride = require("method-override"),
     mongoDB = require('mongodb').MongoClient,
-    archiver = require('archiver');
+    archiver = require('archiver'),
+    session = require("express-session"),
+    path = require("path");
 
 const DataBase = 'mongodb://127.0.0.1:27017/baseT';
 const PuertoNodeJS = "50200";
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride());
@@ -28,7 +35,49 @@ app.post('/modificacionLink',function(Request,Response){
   Response.render(__dirname + "/paginas/modificar.ejs",{id: Request.body.id});
 });
 app.get('/ingresar',function(req,res){
+  if(req.session.loggedin && req.session.acceso == "administracion"){
   res.render(__dirname + "/paginas/ingresar.ejs",{alerta: "none"});
+  }
+  else{
+    mongoDB.connect(DataBase, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("baseT");
+      dbo.collection("almacen").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        res.render(__dirname + "/index.ejs",{documento: result});
+      });
+    });
+  }
+});
+app.get('/login',function(req,res){
+  res.render(__dirname + "/paginas/login.ejs",{alerta:"none"});
+});
+app.post('/loguearse',function(Request,Response){
+  mongoDB.connect(DataBase,function(err,db){
+    if (err) throw err;
+    var dbo = db.db("baseT");
+    var myquery = {usuario: Request.body.Usuario, contrasena: Request.body.Contrasena};
+    console.log(myquery.usuario)
+    console.log(myquery.contrasena)
+    if(myquery.usuario && myquery.contrasena){
+      dbo.collection("cuentas").find(myquery).toArray(function(err,result){
+        if(result.length > 0){
+          Request.session.loggedin = true;
+          Request.session.usuario = result[0].usuario;
+          Request.session.acceso = result[0].acceso;
+          Response.render(__dirname + "/paginas/login.ejs",{alerta: "none"});
+        }
+        else{
+          Response.render(__dirname + "/paginas/login.ejs",{alerta: "incorrecta"});
+          db.close();
+        }
+      });
+    }
+    else{
+      Response.render(__dirname + "/paginas/login.ejs",{alerta: "vacio"});
+      db.close();
+    }
+  });
 });
 app.post('/modificar',function(Request,Response){
   mongoDB.connect(DataBase, function(err, db) {
@@ -65,7 +114,6 @@ app.post('/modificar',function(Request,Response){
   });
 });
 app.post('/transferir',function(Request,Response){
-
   mongoDB.connect(DataBase, function(err, db) {
     if (err) throw err;
     var dbo = db.db("baseT");
