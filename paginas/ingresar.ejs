@@ -47,8 +47,6 @@
               <input class="opciones input" type="text" name="Sector">
               <h3>Unidades</h3>
               <input class="opciones input" type="text" name="Unidad">
-              <h3>Contraseña</h3>
-              <input class="opciones input" type="password" name="Contrasena">
               <br>
               <br>
               <button>Ingresar</button>
@@ -60,8 +58,6 @@
               <form method="post" action="/eliminarObjeto">
                 <h3>Identificador</h3>
                 <input class="opciones input" type="number" name="Identificador">
-                <h3>Contraseña</h3>
-                <input class="opciones input" type="password" name="Contrasena">
                 <br>
                 <br>
                 <button>Eliminar</button>
@@ -71,11 +67,6 @@
       </div>
     </div>
   </body>
-  <script>
-    if("<%-alerta%>" == "contraseña incorrecta"){
-      alert("contraseña incorrecta");
-    }
-  </script>
   <script>
       function myFunction() {
         var x = document.getElementById("linksMobile");
