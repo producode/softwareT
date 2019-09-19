@@ -1,10 +1,9 @@
 var express = require("express"),
     app = express(),
     bodyParser  = require("body-parser"),
-    methodOverride = require("method-override");
-    mongoDB = require('mongodb').MongoClient;
+    methodOverride = require("method-override"),
+    mongoDB = require('mongodb').MongoClient,
     archiver = require('archiver');
-
 
 const DataBase = 'mongodb://127.0.0.1:27017/baseT';
 const PuertoNodeJS = "50200";
@@ -29,7 +28,7 @@ app.post('/modificacionLink',function(Request,Response){
   Response.render(__dirname + "/paginas/modificar.ejs",{id: Request.body.id});
 });
 app.get('/ingresar',function(req,res){
-  res.render(__dirname + "/paginas/ingresar.ejs");
+  res.render(__dirname + "/paginas/ingresar.ejs",{alerta: "none"});
 });
 app.post('/modificar',function(Request,Response){
   mongoDB.connect(DataBase, function(err, db) {
@@ -118,11 +117,8 @@ app.post('/ingresarObjeto',function(Request,Response){
       });
     }
     else{
-      dbo.collection("almacen").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        Response.render(__dirname + "/index.ejs",{documento: result});
-        db.close();
-      });
+      Response.render(__dirname + "/paginas/ingresar.ejs",{alerta: "contraseña incorrecta"});
+      db.close();
     }
   });
 });
@@ -144,11 +140,8 @@ app.post('/eliminarObjeto',function(Request,Response){
         });
       }
       else{
-        dbo.collection("almacen").find({}).toArray(function(err, result) {
-          if (err) throw err;
-          Response.render(__dirname + "/index.ejs",{documento: result});
-          db.close();
-        });
+        Response.render(__dirname + "/paginas/ingresar.ejs",{alerta: "contraseña incorrecta"});
+        db.close();
       }
     });
 });
