@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Ordenar almacen</title>
+    <link rel="stylesheet" type="text/css" href="estilos/principal.css">
+    <link rel="stylesheet" type="text/css" href="estilos/principalChico.css">
+    <link rel="stylesheet" type="text/css" href="estilos/log.css">
+  </head>
+  <body>
+    <div class="contenedor" ng-app="aplicacion" ng-controller="controlPrincipal">
+      <header>
+        <img id="Logo" src="imagenes/T_LOGO.png" style="width: 50px">
+      </header>
+      <div class="contenedor">
+        <div class="menu">
+          <div class="alineamiento">
+            <h4>Bienvenido</h4>
+            <br>
+            <form method="post" action="/loguearse">
+              <h3>Usuario</h3>
+              <input class="opciones input" type="text" name="Usuario">
+              <h3>Contraseña</h3>
+              <input class="opciones input" type="password" name="Contrasena">
+              <br>
+              <br>
+              <button>Ingresar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    if("<%-alerta%>" == "incorrecta"){
+      alert("Usuario y/o contraseña incorrecta");
+    }
+    else if("<%-alerta%>" == "vacio"){
+      alert("Ingrese los datos para loguearse");
+    }
+  </script>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("linksMobile");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
+      }
+    }
+  </script>
+</html>
