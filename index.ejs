@@ -15,10 +15,9 @@
         <img id="Logo" src="imagenes/T_LOGO.png" style="width: 50px">
         <nav class="nav_link">
           <ul>
-            <li><a href="/">Lista</a></li>
+            <li><a href="/lista">Lista</a></li>
             <li><a href="/ingresar">Administracion</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
-            <li><a href="/login">Login</a></li>
             <li><a href="/logout">Logout</a></li>
             <li><a href="#">ARsystem</a></li>
           </ul>
@@ -28,10 +27,9 @@
       </header>
       <div id="linksMobile">
           <ul>
-            <li><a href="/">Lista</a></li>
+            <li><a href="/lista">Lista</a></li>
             <li><a href="/ingresar">Administracion</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
-            <li><a href="/login">Login</a></li>
             <li><a href="/logout">Logout</a></li>
             <li><a href="#">ARsystem</a></li>
           </ul>
@@ -77,6 +75,19 @@
     </div>
   </body>
   <script>
+    var logeado = "<%-accesos%>";
+    if(logeado == "administracion"){
+      console.log("administracion");
+    }
+    else if(logeado == "normal"){
+      console.log("normal");
+    }
+    else if(logeado == "none"){
+      console.log("none");
+    }
+    else{
+      console.log("none");
+    }
     var app = angular.module('aplicacion', []);
     app.controller('controlPrincipal', function($scope, $http) {
       var otro = <%- JSON.stringify(documento)%>;

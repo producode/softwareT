@@ -5,8 +5,9 @@ var express = require("express"),
     mongoDB = require('mongodb').MongoClient,
     archiver = require('archiver'),
     session = require("express-session"),
-    path = require("path");
+    crypto = require('crypto');
 
+const BCRYPT_SALT_ROUNDS = 11;
 const DataBase = 'mongodb://127.0.0.1:27017/baseT';
 const PuertoNodeJS = "50200";
 app.use(session({
@@ -19,12 +20,27 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(express.static(__dirname + '/public'));
 app.get('/',function(req,res){
+  if(req.session.loggedin){
+    mongoDB.connect(DataBase, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("baseT");
+      dbo.collection("almacen").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        res.render(__dirname + "/index.ejs",{documento: result,accesos: req.session.acceso});
+      });
+    });
+  }
+  else{
+    res.render(__dirname + "/paginas/login.ejs",{alerta:"none"});
+  }
+});
+app.get('/lista',function(req,res){
   mongoDB.connect(DataBase, function(err, db) {
     if (err) throw err;
     var dbo = db.db("baseT");
     dbo.collection("almacen").find({}).toArray(function(err, result) {
       if (err) throw err;
-      res.render(__dirname + "/index.ejs",{documento: result});
+      res.render(__dirname + "/index.ejs",{documento: result,accesos: req.session.acceso});
     });
   });
 });
@@ -38,7 +54,7 @@ app.get('/modificacionLibre',function(req,res){
       var dbo = db.db("baseT");
       dbo.collection("almacen").find({}).toArray(function(err, result) {
         if (err) throw err;
-        res.render(__dirname + "/index.ejs",{documento: result});
+        res.render(__dirname + "/index.ejs",{documento: result,accesos: req.session.acceso});
       });
     });
   }
@@ -53,7 +69,7 @@ app.post('/modificacionLink',function(Request,Response){
       var dbo = db.db("baseT");
       dbo.collection("almacen").find({}).toArray(function(err, result) {
         if (err) throw err;
-        Response.render(__dirname + "/index.ejs",{documento: result});
+        Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
       });
     });
   }
@@ -68,41 +84,35 @@ app.get('/ingresar',function(req,res){
       var dbo = db.db("baseT");
       dbo.collection("almacen").find({}).toArray(function(err, result) {
         if (err) throw err;
-        res.render(__dirname + "/index.ejs",{documento: result});
+        res.render(__dirname + "/index.ejs",{documento: result,accesos: req.session.acceso});
       });
     });
   }
 });
-app.get('/login',function(req,res){
-  res.render(__dirname + "/paginas/login.ejs",{alerta:"none"});
-});
 app.get('/logout',function(req,res){
-  mongoDB.connect(DataBase, function(err, db) {
-    if (err) throw err;
-    req.session.loggedin = false;
-    req.session.usuario = "anonimo";
-    req.session.acceso = "anonimo";
-    var dbo = db.db("baseT");
-    dbo.collection("almacen").find({}).toArray(function(err, result) {
-      if (err) throw err;
-      res.render(__dirname + "/index.ejs",{documento: result});
-    });
-  });
+  req.session.loggedin = false;
+  req.session.usuario = "";
+  req.session.acceso = "";
+  res.render(__dirname + "/paginas/login.ejs",{alerta:"none"});
 });
 app.post('/loguearse',function(Request,Response){
   mongoDB.connect(DataBase,function(err,db){
     if (err) throw err;
     var dbo = db.db("baseT");
-    var myquery = {usuario: Request.body.Usuario, contrasena: Request.body.Contrasena};
-    console.log(myquery.usuario)
-    console.log(myquery.contrasena)
-    if(myquery.usuario && myquery.contrasena){
+    var myquery = {usuario: Request.body.Usuario};
+    if(myquery.usuario && Request.body.Contrasena){
       dbo.collection("cuentas").find(myquery).toArray(function(err,result){
-        if(result.length > 0){
+        var mykey = crypto.createDecipher('aes-128-cbc', 'T$producciones');
+        var mystr = mykey.update(result[0].contrasena, 'hex', 'utf8')
+        mystr += mykey.final('utf8');
+        if(result.length > 0 && mystr == Request.body.Contrasena){
           Request.session.loggedin = true;
           Request.session.usuario = result[0].usuario;
           Request.session.acceso = result[0].acceso;
-          Response.render(__dirname + "/paginas/login.ejs",{alerta: "none"});
+          dbo.collection("almacen").find({}).toArray(function(err, result) {
+            if (err) throw err;
+            Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+          });
         }
         else{
           Response.render(__dirname + "/paginas/login.ejs",{alerta: "incorrecta"});
@@ -141,7 +151,7 @@ app.post('/modificar',function(Request,Response){
             console.log("1 document updated");
             dbo.collection("almacen").find({}).toArray(function(err, result) {
               if (err) throw err;
-              Response.render(__dirname + "/index.ejs",{documento: result});
+              Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
               db.close();
             });
           });
@@ -166,7 +176,7 @@ app.post('/transferir',function(Request,Response){
             console.log("1 document updated");
             dbo.collection("almacen").find({}).toArray(function(err, result) {
               if (err) throw err;
-              Response.render(__dirname + "/index.ejs",{documento: result});
+              Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
               db.close();
             });
           });
@@ -194,7 +204,7 @@ app.post('/ingresarObjeto',function(Request,Response){
         console.log("1 document inserted");
         dbo.collection("almacen").find({}).toArray(function(err, result) {
           if (err) throw err;
-          Response.render(__dirname + "/index.ejs",{documento: result});
+          Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
           db.close();
         });
       });
@@ -212,11 +222,31 @@ app.post('/eliminarObjeto',function(Request,Response){
         console.log("1 document deleted");
         dbo.collection("almacen").find({}).toArray(function(err, result) {
           if (err) throw err;
-          Response.render(__dirname + "/index.ejs",{documento: result});
+          Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
           db.close();
         });
       });
     });
+});
+app.post('/crearUsuario',function(Request,Response){
+  mongoDB.connect(DataBase, function(err,db){
+    if (err) throw err;
+    var dbo = db.db("baseT");
+    var mykey = crypto.createCipher('aes-128-cbc', 'T$producciones');
+    var mystr = mykey.update(Request.body.Contrasena, 'utf8', 'hex');
+    mystr += mykey.final('hex');
+    var query = {nombre: Request.body.Nombre, email: Request.body.Email, usuario: Request.body.Usuario, contrasena: mystr, acceso: Request.body.Acceso};
+    dbo.collection("cuentas").insertOne(query, function(err, res) {
+      if (err) throw err;
+      console.log("1 document inserted");
+      console.log(query);
+      dbo.collection("almacen").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+        db.close();
+      });
+    });
+  });
 });
 function formatoFecha(fechaActual){
   var minutos = fechaActual.getMinutes();

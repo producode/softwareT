@@ -12,25 +12,7 @@
     <div class="contenedor" ng-app="aplicacion" ng-controller="controlPrincipal">
       <header>
         <img id="Logo" src="imagenes/T_LOGO.png" style="width: 50px">
-        <nav class="nav_link">
-          <ul>
-            <li><a href="/">Lista</a></li>
-            <li><a href="/ingresar">Administracion</a></li>
-            <li><a href="/modificacionLibre">Modificar</a></li>
-            <li><a href="#">ARsystem</a></li>
-          </ul>
-        </nav>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">menu</a>
-        <button><a href="/">Inicio</a></button>
       </header>
-      <div id="linksMobile">
-        <ul>
-          <li><a href="/">Lista</a></li>
-          <li><a href="/ingresar">Administracion</a></li>
-          <li><a href="/modificacionLibre">Modificar</a></li>
-          <li><a href="#">ARsystem</a></li>
-        </ul>
-      </div>
       <div class="contenedor">
         <div class="menu">
           <div class="alineamiento">
@@ -59,13 +41,13 @@
     }
   </script>
   <script>
-      function myFunction() {
-        var x = document.getElementById("linksMobile");
-        if (x.style.display === "block") {
-          x.style.display = "none";
-        } else {
-          x.style.display = "block";
-        }
+    function myFunction() {
+      var x = document.getElementById("linksMobile");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
       }
-      </script>
+    }
+  </script>
 </html>
