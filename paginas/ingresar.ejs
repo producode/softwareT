@@ -14,7 +14,7 @@
         <img id="Logo" src="imagenes/T_LOGO.png" style="width: 50px">
         <nav class="nav_link">
           <ul>
-            <li><a href="/">Lista</a></li>
+            <li><a href="/lista">Lista</a></li>
             <li><a href="/ingresar">Administracion</a></li>
             <li><a href="/modificacionLibre">Modificar</a></li>
             <li><a href="#">ARsystem</a></li>
@@ -25,7 +25,7 @@
       </header>
       <div id="linksMobile">
         <ul>
-          <li><a href="/">Lista</a></li>
+          <li><a href="/lista">Lista</a></li>
           <li><a href="/ingresar">Administracion</a></li>
           <li><a href="/modificacionLibre">Modificar</a></li>
           <li><a href="#">ARsystem</a></li>
@@ -47,8 +47,6 @@
               <input class="opciones input" type="text" name="Sector">
               <h3>Unidades</h3>
               <input class="opciones input" type="text" name="Unidad">
-              <h3>Contraseña</h3>
-              <input class="opciones input" type="password" name="Contrasena">
               <br>
               <br>
               <button>Ingresar</button>
@@ -60,22 +58,37 @@
               <form method="post" action="/eliminarObjeto">
                 <h3>Identificador</h3>
                 <input class="opciones input" type="number" name="Identificador">
-                <h3>Contraseña</h3>
-                <input class="opciones input" type="password" name="Contrasena">
                 <br>
                 <br>
                 <button>Eliminar</button>
               </form>
             </div>
+            <div class="navegador_lista">
+                <h4>Crear usuario</h4>
+                <br>
+                <form method="post" action="/crearUsuario">
+                  <h3>Nombre</h3>
+                  <input class="opciones input" type="text" name="Nombre">
+                  <h3>Email</h3>
+                  <input class="opciones input" type="text" name="Email">
+                  <h3>Tipo de acceso</h3>
+                  <select class="opciones input" name="Acceso">
+                    <option value="administracion">Administrador</option>
+                    <option value="normal">Base</option>
+                  </select>
+                  <h3>Usuario</h3>
+                  <input class="opciones input" type="text" name="Usuario">
+                  <h3>Contraseña</h3>
+                  <input class="opciones input" type="password" name="Contrasena">
+                  <br>
+                  <br>
+                  <button>Ingresar</button>
+                </form>
+            </div>
         </div>
       </div>
     </div>
   </body>
-  <script>
-    if("<%-alerta%>" == "contraseña incorrecta"){
-      alert("contraseña incorrecta");
-    }
-  </script>
   <script>
       function myFunction() {
         var x = document.getElementById("linksMobile");
