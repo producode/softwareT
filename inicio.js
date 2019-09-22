@@ -248,6 +248,23 @@ app.post('/crearUsuario',function(Request,Response){
     });
   });
 });
+app.post('/eliminarUsuario',function(Request,Response){
+  mongoDB.connect(DataBase, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("baseT");
+    var myquery = { usuario: parseInt(Request.body.Usuario) };
+    console.log(myquery);
+    dbo.collection("cuentas").deleteOne(myquery, function(err, obj) {
+      if (err) throw err;
+      console.log("1 document deleted");
+      dbo.collection("almacen").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+        db.close();
+      });
+    });
+  });
+});
 function formatoFecha(fechaActual){
   var minutos = fechaActual.getMinutes();
   if(minutos < 10){
