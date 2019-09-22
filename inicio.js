@@ -252,7 +252,7 @@ app.post('/eliminarUsuario',function(Request,Response){
   mongoDB.connect(DataBase, function(err, db) {
     if (err) throw err;
     var dbo = db.db("baseT");
-    var myquery = { usuario: parseInt(Request.body.Usuario) };
+    var myquery = { usuario: Request.body.Usuario };
     console.log(myquery);
     dbo.collection("cuentas").deleteOne(myquery, function(err, obj) {
       if (err) throw err;
