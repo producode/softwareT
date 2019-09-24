@@ -160,7 +160,7 @@ app.post('/modificar',function(Request,Response){
     });
   });
 });
-app.post('/transferir',function(Request,Response){
+app.post('/transferir',function(Request,Response,next){
   mongoDB.connect(DataBase, function(err, db) {
     if (err) throw err;
     var dbo = db.db("baseT");
@@ -168,18 +168,103 @@ app.post('/transferir',function(Request,Response){
       if (err) throw err;
       result.forEach(element => {
         if(element.id == Request.body.Identificador){
-          console.log(element);
-          var myquery = { id: parseInt(Request.body.Identificador) };
-          var newvalues = { $set: { sector: Request.body.Sector,fechaModificacion: formatoFecha(new Date(Date.now())),modificacion: "transferencia", editor: Request.session.usuario } };
-          dbo.collection("almacen").updateOne(myquery, newvalues, function(err, res) {
-            if (err) throw err;
-            console.log("1 document updated");
+          if(Request.body.Totalidad){
+            console.log(element);
+            var myquery = { id: parseInt(Request.body.Identificador) };
+            var query = { nombre: element.nombre };
+            dbo.collection("almacen").find(query).toArray(function(err, result2) {
+              var esperando = true;
+              result2.forEach(element2 =>{
+                if(element2.sector == Request.body.Sector){
+                  console.log("entro a uno");
+                  esperando = false;
+                  var newvalues = { $set: { sector: Request.body.Sector,fechaModificacion: formatoFecha(new Date(Date.now())),modificacion: "transferencia", editor: Request.session.usuario, cantidad: parseInt(element2.cantidad + element.cantidad) } };
+                  myquery = { id: element2.id };
+                  dbo.collection("almacen").updateOne(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+                    console.log("1 document updated");
+                    var borrarQuery = { id: element.id };
+                    console.log(borrarQuery);
+                    dbo.collection("almacen").deleteOne(borrarQuery, function(err, obj) {
+                      if (err) throw err;
+                      console.log("1 document deleted");
+                      dbo.collection("almacen").find({}).toArray(function(err, result) {
+                        if (err) throw err;
+                        Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+                        db.close();
+                      });
+                    });
+                  });
+                }
+              });
+              if(esperando){
+                console.log("entro a otro");
+                var newvalues = { $set: { sector: Request.body.Sector,fechaModificacion: formatoFecha(new Date(Date.now())),modificacion: "transferencia", editor: Request.session.usuario } };
+                dbo.collection("almacen").updateOne(myquery, newvalues, function(err, res) {
+                  if (err) throw err;
+                  console.log("1 document updated");
+                  dbo.collection("almacen").find({}).toArray(function(err, result) {
+                    if (err) throw err;
+                    Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+                    db.close();
+                  });
+                });
+              }
+            });
+          }
+          else if(Request.body.Cantidad){
             dbo.collection("almacen").find({}).toArray(function(err, result) {
               if (err) throw err;
-              Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
-              db.close();
+              var idNuevo = 0;
+              result.forEach(element => {
+                if(element.id > idNuevo){
+                  idNuevo = element.id;
+                }
+              });
+              idNuevo = idNuevo + 1;
+              var myobj = { id: idNuevo, nombre: element.nombre, sector:Request.body.Sector, fechaModificacion: formatoFecha(new Date(Date.now())), editor: Request.session.usuario , modificacion: "Transferencia", cantidad: parseInt(Request.body.Cantidad) , cantidadMinima: element.CantidadMinima , unidad: element.unidad };
+              var query = { nombre: element.nombre };
+              dbo.collection("almacen").find(query).toArray(function(err, result2) {
+                var esperando = true;
+                result2.forEach(element2 =>{
+                  if(element2.sector == Request.body.Sector){
+                    esperando = false;
+                    var agregarQuery = { $set: { fechaModificacion: formatoFecha(new Date(Date.now())),modificacion: "transferencia", editor: Request.session.usuario, cantidad: parseInt(element2.cantidad + myobj.cantidad) } };
+                    var sacarQuery = { $set: { fechaModificacion: formatoFecha(new Date(Date.now())),modificacion: "transferencia", editor: Request.session.usuario, cantidad: parseInt(element.cantidad - myobj.cantidad) } };
+                    var buscarAgregarQuery = { id: parseInt(element2.id) };
+                    var buscarSacarQuery = { id: parseInt(element.id) };
+                    dbo.collection("almacen").updateOne(buscarAgregarQuery, agregarQuery, function(err, res) {
+                      if (err) throw err;
+                      dbo.collection("almacen").updateOne(buscarSacarQuery, sacarQuery, function(err, res) {
+                        if (err) throw err;
+                        dbo.collection("almacen").find({}).toArray(function(err, result) {
+                          if (err) throw err;
+                          Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+                          db.close();
+                        });
+                      });
+                    });
+                  }
+                });
+                if(esperando){
+                  var sacarQuery = { $set: { fechaModificacion: formatoFecha(new Date(Date.now())),modificacion: "transferencia", editor: Request.session.usuario, cantidad: parseInt(element.cantidad - myobj.cantidad) } };
+                  var buscarSacarQuery = { id: parseInt(element.id) };
+                  dbo.collection("almacen").updateOne(buscarSacarQuery, sacarQuery, function(err, res) {
+                    if (err) throw err;
+                    dbo.collection("almacen").insertOne(myobj, function(err, res) {
+                      if (err) throw err;
+                      console.log("1 document inserted");
+                      dbo.collection("almacen").find({}).toArray(function(err, result) {
+                        if (err) throw err;
+                        Response.render(__dirname + "/index.ejs",{documento: result,accesos: Request.session.acceso});
+                        db.close();
+                      });
+                    });
+                  });
+                }
+              });
             });
-          });
+          }
         }
       });
     });
