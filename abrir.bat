@@ -1,5 +1,5 @@
 git pull
 call npm install
-start abrirBaseDeDatos.bat
-sleep 10
+start mongod
+ping localhost:27017
 node inicio.js
