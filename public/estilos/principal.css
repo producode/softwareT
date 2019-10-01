@@ -54,6 +54,10 @@ button{
   color: #00758a;
 }
 
+#linksMobile li{
+  padding: 5px 0px;
+}
+
 body {
   font-family: 'Montserrat',sans-serif;
 }
